@@ -1,4 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { $ } from 'protractor';
+import { NgbdSortableHeader, SortEvent} from '../directive/sortable.directive';
+
+const roomListCon = [
+    { Id: 1, Building: 'House1', Room: 'Living Room' },
+    { Id: 2, Building: 'House2', Room: 'Kitchen' }
+];
+
+const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1: v1 > v2 ? 1 : 0;
 
 @Component({
     selector: 'app-room',
@@ -7,31 +16,44 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoomComponent implements OnInit {
 
+    @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+
     constructor() { }
 
     ngOnInit(): void {
     }
 
-    roomList = [
-        {Id: 1, Building: 'House1', Room: 'Living Room'},
-        {Id: 2, Building: 'House1', Room: 'Kitchen'}
-    ];
+    /* ----------------
+        Properties
+    -------------------*/
+    roomList = roomListCon;
 
+    isEdit: boolean = false;
+
+    numberInput: number;
+    buildingInput: string;
+    roomInput: string;
 
     /* ------------------
         Modal Triggers
     ---------------------*/
-    addRoomModal(): void {
-        // trigger the modal.
-        // reset all the field.
+    addRoomClick(): void {
+        this.isEdit = false;
+
+        this.numberInput = -1;
+        this.buildingInput = '';
+        this.roomInput = '';
     }
 
-    editRoomModal(): void {
-        // trigger the edit modal.
-        // get Room properties and fill in the space.
+    editRoomClick(room): void {
+        this.isEdit = true;
+
+        this.numberInput = room.Id;
+        this.buildingInput = room.Building;
+        this.roomInput = room.Room;
     }
 
-    deleteRoomModal(): void {
+    deleteRoomClick(): void {
         // trigger the delete modal.
     }
 
@@ -39,7 +61,7 @@ export class RoomComponent implements OnInit {
         Modal Buttons
     --------------------*/
     addRoom(): void {
-
+        console.log(this.numberInput);
     }
 
     updateRoom(): void {
@@ -47,8 +69,31 @@ export class RoomComponent implements OnInit {
     }
 
     deleteRoom(): void {
-        
+
     }
 
+
+    resetRoomInputs(): void {
+
+    }
+
+    onSort({column, direction}: SortEvent){
+        this.headers.forEach(header => {
+            if(header.sortable !== column){
+                header.direction = '';
+            }
+        });
+
+        console.log('hi');
+
+        if(direction === '' || column ===''){
+            this.roomList = roomListCon;
+        }else{
+            this.roomList = [...roomListCon].sort((a, b) => {
+                const res = compare(a[column], b[column]);
+                return direction === 'asc' ? res : -res;
+            })
+        }
+    }
 
 }
