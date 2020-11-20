@@ -1,0 +1,4 @@
+#roomTableDiv {
+    height: calc(100vh - 270px);
+    overflow: auto;
+}

@@ -6,18 +6,22 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { NgbdSortableHeader } from './directive/sortable.directive';
+
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { RoomComponent } from './room/room.component';
 import { ItemComponent } from './item/item.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatTableModule } from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
+
 
 @NgModule({
     declarations: [
         AppComponent,
         NavMenuComponent,
-        NgbdSortableHeader,
         HomeComponent,
         CounterComponent,
         FetchDataComponent,
@@ -34,7 +38,10 @@ import { ItemComponent } from './item/item.component';
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'room', component: RoomComponent },
             { path: 'item', component: ItemComponent }
-        ], { relativeLinkResolution: 'legacy' })
+        ], { relativeLinkResolution: 'legacy' }),
+        BrowserAnimationsModule,
+        MatTableModule,
+        MatSortModule
     ],
     providers: [],
     bootstrap: [AppComponent]
