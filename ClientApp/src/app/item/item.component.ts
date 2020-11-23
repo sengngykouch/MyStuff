@@ -7,10 +7,10 @@ import { FormControl, Validators } from '@angular/forms';
 
 
 //TODO: remove this after hook with API.
-let date = new Date(2021,11, 23);
+let date = new Date(2021, 11, 23);
 const itemConst = [
-    {Id: 1, Name: 'Noodle', Location: 'Kitchen', Description: 'White chinese noodle in green package', ExpirationDate: date},
-    {Id: 2, Name: 'Soup Base', Location: 'Kitchen', Description: 'Orange package with sheep as the cover', ExpirationDate: date}
+    { Id: 1, Name: 'Noodle', Location: 'Kitchen', Description: 'White chinese noodle in green package', ExpirationDate: date },
+    { Id: 2, Name: 'Soup Base', Location: 'Kitchen', Description: 'Orange package with sheep as the cover', ExpirationDate: date }
 ];
 
 @Component({
@@ -54,6 +54,8 @@ export class ItemComponent implements OnInit, AfterViewInit {
     pictureInput: string;
     expirationDateInput: Date;
 
+    minDateInput: Date = new Date();
+
     /* ----------------
         Modal Triggers
     -------------------*/
@@ -80,14 +82,14 @@ export class ItemComponent implements OnInit, AfterViewInit {
     }
 
     deleteItemClick(): void {
-        
+
     }
 
     /* -----------------
         Modal Buttons
     --------------------*/
     addItem(): void {
-        
+
     }
 
     updateItem(): void {
