@@ -4,6 +4,8 @@ import { $ } from 'protractor';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
+import { FormControl, Validators } from '@angular/forms';
+
 const roomListCon = [
     { Id: 1, Building: 'House1', Room: 'Living Room' },
     { Id: 2, Building: 'House2', Room: 'Kitchen' },
@@ -46,11 +48,6 @@ export class RoomComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
     }
 
-    displayedColumns: string[] = ['Id', 'Building', 'Room', 'Option'];
-    dataSource = new MatTableDataSource(roomListCon);
-
-    @ViewChild(MatSort) sort: MatSort;
-
     ngAfterViewInit(): void {
         this.dataSource.sort = this.sort;
     }
@@ -58,6 +55,17 @@ export class RoomComponent implements OnInit, AfterViewInit {
     /* ----------------
         Properties
     -------------------*/
+    displayedColumns: string[] = ['Id', 'Building', 'Room', 'Option'];
+    dataSource = new MatTableDataSource(roomListCon);
+
+    @ViewChild(MatSort) sort: MatSort;
+
+    buildingInputControl = new FormControl('', [
+        Validators.required,
+    ]);
+    roomInputControl = new FormControl('', [
+        Validators.required,
+    ]);
 
     isEdit: boolean = false;
 
@@ -92,7 +100,8 @@ export class RoomComponent implements OnInit, AfterViewInit {
         Modal Buttons
     --------------------*/
     addRoom(): void {
-        console.log(this.numberInput);
+        console.log(this.buildingInputControl);
+
     }
 
     updateRoom(): void {
