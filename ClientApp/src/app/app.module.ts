@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
-
+import { AngularMaterialModule } from './angular-material/angular-material.module';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -15,17 +15,6 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { RoomComponent } from './room/room.component';
 import { ItemComponent } from './item/item.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-
-
-
 
 @NgModule({
     declarations: [
@@ -50,13 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
             { path: 'item', component: ItemComponent }
         ], { relativeLinkResolution: 'legacy' }),
         BrowserAnimationsModule,
-        MatTableModule,
-        MatSortModule,
-        MatButtonModule,
-        MatIconModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatNativeDateModule
+        AngularMaterialModule
     ],
     providers: [],
     bootstrap: [AppComponent]
