@@ -33,3 +33,6 @@ table {
 .full-width {
     width: 100%;
 }
+
+/* Material Style Override */
+.cdk-overlay-container{ z-index: 1200 !important; }

@@ -47,7 +47,7 @@
                 <ng-container matColumnDef="ExpirationDate">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiration Date</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.ExpirationDate}}
+                        {{element.ExpirationDate | date:'shortDate'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="Option">
@@ -135,8 +135,9 @@
                         <div class="col-md-12">
                             <mat-form-field class="full-width">
                                 <mat-label>Expiration Date</mat-label>
-                                <input matInput type="text" [(ngModel)]="expirationDateInput" 
-                                    placeholder="Enter a expiration date...">
+                                <input matInput [matDatepicker]="expirationDatePicker" [(ngModel)]="expirationDateInput">
+                                <mat-datepicker-toggle matSuffix [for]="expirationDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #expirationDatePicker></mat-datepicker>
                             </mat-form-field>
                         </div>
                     </div>
