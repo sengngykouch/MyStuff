@@ -12,6 +12,6 @@ namespace TrackMyStuff.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected TrackMyStuffDBContext DBContext => (TrackMyStuffDBContext)HttpContext.RequestServices.GetService(typeof(TrackMyStuffDBContext));
+        protected TrackMyStuffDBContext _dbContext => (TrackMyStuffDBContext)HttpContext.RequestServices.GetService(typeof(TrackMyStuffDBContext));
     }
 }

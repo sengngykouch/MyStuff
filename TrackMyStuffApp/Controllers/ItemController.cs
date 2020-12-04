@@ -1,6 +1,6 @@
 ﻿using EFDataAccessLib.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,11 +12,83 @@ namespace TrackMyStuff.Controllers
     public class ItemController : BaseController
     {
         [HttpGet]
-        public int Get()
+        public async Task<ActionResult<IEnumerable<Item>>> Get()
         {
-            var result = DBContext.Item.Count();
+            var items = await _dbContext.Item.ToListAsync();
 
-            return result;
+            return items;
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Item>> Get(int id)
+        {
+            var item = await _dbContext.Item.FindAsync(id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            return item;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Item>> Post(Item item)
+        {
+            _dbContext.Item.Add(item);
+            await _dbContext.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(int id, Item item)
+        {
+            if (id != item.Id)
+            {
+                return BadRequest();
+            }
+
+            var originalItem = await _dbContext.Item.FindAsync(id);
+            if (originalItem == null)
+            {
+                return NotFound();
+            }
+
+            originalItem.Name = item.Name;
+            originalItem.Location = item.Location;
+            originalItem.Description = item.Description;
+            originalItem.ExpirationDate = item.ExpirationDate;
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!ItemExists(id))
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var item = await _dbContext.Item.FindAsync(id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            _dbContext.Item.Remove(item);
+            await _dbContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+        private bool ItemExists(int id) => _dbContext.Item.Any(e => e.Id == id);
     }
 }
