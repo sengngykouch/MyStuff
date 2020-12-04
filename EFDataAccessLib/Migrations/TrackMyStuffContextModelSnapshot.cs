@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFDataAccessLib.Migrations
 {
-    [DbContext(typeof(TrackMyStuffContext))]
+    [DbContext(typeof(TrackMyStuffDBContext))]
     partial class TrackMyStuffContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

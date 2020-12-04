@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFDataAccessLib.Migrations
 {
-    [DbContext(typeof(TrackMyStuffContext))]
+    [DbContext(typeof(TrackMyStuffDBContext))]
     [Migration("20201202214706_InitialDBCreation")]
     partial class InitialDBCreation
     {

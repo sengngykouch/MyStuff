@@ -29,7 +29,7 @@ namespace MyStuff
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddDbContext<TrackMyStuffContext>(options =>
+            services.AddDbContext<TrackMyStuffDBContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("TrackMyStuffDB"));
             });

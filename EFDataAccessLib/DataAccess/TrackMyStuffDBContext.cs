@@ -6,9 +6,9 @@ using System.Text;
 
 namespace EFDataAccessLib.DataAccess
 {
-    public class TrackMyStuffContext : DbContext
+    public class TrackMyStuffDBContext : DbContext
     {
-        public TrackMyStuffContext(DbContextOptions options) : base(options) { }
+        public TrackMyStuffDBContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Item> Item { get; set; }
     }
