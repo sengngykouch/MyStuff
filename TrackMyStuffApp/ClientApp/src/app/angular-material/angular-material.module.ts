@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /* ---------------------------------------------------------------------------
-    Import all the Material dependencies here. Don't forget to Export them. 
+    Import all the Material dependencies here. Don't forget to Export them.
 ------------------------------------------------------------------------------*/
 
 import { MatTableModule } from '@angular/material/table';
