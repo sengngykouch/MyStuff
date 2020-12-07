@@ -13,8 +13,7 @@ export class ItemService {
     constructor(
         private http: HttpClient,
         @Inject('BASE_URL') baseUrl: string
-    )
-    {
+    ) {
         this.itemUrl = baseUrl + 'api/item';
     }
 
@@ -41,7 +40,7 @@ export class ItemService {
     }
 
     deleteItem(id: number): Observable<any> {
-        let url = `${this.itemUrl}/${ id }`;
+        let url = `${this.itemUrl}/${id}`;
         return this.http.delete(url, { observe: 'response' })
             .pipe(
                 catchError(this.handleError)
