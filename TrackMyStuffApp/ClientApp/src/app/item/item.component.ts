@@ -1,7 +1,5 @@
-import { error } from '@angular/compiler/src/util';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-
 
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
@@ -25,6 +23,8 @@ export class ItemComponent implements OnInit {
     /* ----------------
         Properties
     -------------------*/
+    isItemLoading: boolean = true;
+
     displayedColumns: string[] = ['Id', 'Name', 'Location', 'Description', 'Picture', 'ExpirationDate', 'Option'];
 
     dataSource;// = new MatTableDataSource<Item>(); 
@@ -49,13 +49,14 @@ export class ItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.getAllItems();
-        
+
     }
 
     getAllItems() {
         this.itemService.getItems().subscribe(items => {
             this.dataSource = items;
             //this.dataSource.sort = this.sort;
+            this.isItemLoading = false;
         });
     }
 
@@ -99,12 +100,16 @@ export class ItemComponent implements OnInit {
             ExpirationDate: this.expirationDateInput
         };
 
+        this.isItemLoading = true;
+
         this.itemService.addItem(itemToAdd).subscribe(itemResult => {
             this.closeButtonAddOrEdit.nativeElement.click();
             this.dataSource.push(itemResult);
             this.table.renderRows();
+
+            this.isItemLoading = false;
         }, error => {
-                // show error on a toast or modal.
+            // show error on a toast or modal.
         });
     }
 
@@ -116,6 +121,7 @@ export class ItemComponent implements OnInit {
             Description: this.descriptionInput,
             ExpirationDate: this.expirationDateInput
         };
+        this.isItemLoading = true;
 
         this.itemService.updateItem(itemToUpdate).subscribe(response => {
             if (response.status === 200) {
@@ -136,7 +142,7 @@ export class ItemComponent implements OnInit {
                 this.getAllItems();
             }
         }, error => {
-                //maybe create a toast or modal to show error.
+            //maybe create a toast or modal to show error.
         });
     }
 
