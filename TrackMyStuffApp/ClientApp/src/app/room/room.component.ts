@@ -45,13 +45,6 @@ export class RoomComponent implements OnInit, AfterViewInit {
 
     constructor() { }
 
-    ngOnInit(): void {
-    }
-
-    ngAfterViewInit(): void {
-        this.dataSource.sort = this.sort;
-    }
-
     /* ----------------
         Properties
     -------------------*/
@@ -67,11 +60,18 @@ export class RoomComponent implements OnInit, AfterViewInit {
         Validators.required,
     ]);
 
-    isEdit: boolean = false;
+    isEdit = false;
 
     numberInput: number;
     buildingInput: string;
     roomInput: string;
+
+    ngOnInit(): void {
+    }
+
+    ngAfterViewInit(): void {
+        this.dataSource.sort = this.sort;
+    }
 
     /* ------------------
         Modal Triggers

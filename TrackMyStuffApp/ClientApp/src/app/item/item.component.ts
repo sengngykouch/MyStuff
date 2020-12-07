@@ -1,3 +1,4 @@
+import { error } from '@angular/compiler/src/util';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -69,17 +70,17 @@ export class ItemComponent implements OnInit {
 
     editItemClick(item): void {
         this.isEdit = true;
-
-        this.idInput = item.Id;
-        this.nameInput = item.Name;
-        this.locationInput = item.Location;
-        this.descriptionInput = item.Description;
-        this.pictureInput = item.Picture;
-        this.expirationDateInput = item.ExpirationDate;
+        debugger;
+        this.idInput = item.id;
+        this.nameInput = item.name;
+        this.locationInput = item.location;
+        this.descriptionInput = item.description;
+        this.pictureInput = item.picture;
+        this.expirationDateInput = item.expirationDate;
     }
 
-    deleteItemClick(): void {
-
+    deleteItemClick(item): void {
+        this.idInput = item.id;
     }
 
     /* -----------------
@@ -99,15 +100,43 @@ export class ItemComponent implements OnInit {
             
             this.table.renderRows();
             
+        }, error => {
+                // show error on a toast or modal.
         });
     }
 
     updateItem(): void {
+        let itemToUpdate: Item = {
+            Id: this.idInput,
+            Name: this.nameInput,
+            Location: this.locationInput,
+            Description: this.descriptionInput,
+            ExpirationDate: this.expirationDateInput
+        };
 
+        this.itemService.updateItem(itemToUpdate).subscribe(response => {
+            if (response.status === 200) {
+                //close modal.
+
+                // refresh data on the table.
+            }
+        }, error => {
+            //maybe create a toast or modal to show error.
+        });
     }
 
     deleteItem(): void {
+        let itemId = this.idInput;
 
+        this.itemService.deleteItem(itemId).subscribe(response => {
+            if (response.status === 200) {
+                //close modal.
+
+                // refresh data on the table.
+            }
+        }, error => {
+                //maybe create a toast or modal to show error.
+        });
     }
 
 }
