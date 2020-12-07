@@ -1,0 +1,184 @@
+<h1>My Items</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="float-right">
+                <button mat-raised-button color="primary" (click)="addItemClick()" data-toggle="modal"
+                    data-target="#addOrEditItemModal">Add Item</button>
+            </div>
+        </div>
+    </div>
+
+    <hr class="mb-0" />
+
+    <div class="row">
+        <div class="col-md-12" id="itemTableDiv">
+            <table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="Id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.id}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.name}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Location">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.location}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.description}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Picture">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Picture</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.picture}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="ExpirationDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiration Date</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.expirationDate | date:'shortDate'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="Option">
+                    <th mat-header-cell *matHeaderCellDef>Option</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button class="btn" (click)="editItemClick(element)" data-toggle="modal"
+                            data-target="#addOrEditItemModal">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+
+                        <button class="btn" (click)="deleteItemClick(element)" data-toggle="modal"
+                            data-target="#deleteItemModal">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add OR Edit Modal -->
+<div class="modal fade" id="addOrEditItemModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">{{isEdit ? 'Edit Item' : 'Add Item'}}</h2>
+                <button type="button" class="close" data-dismiss="modal" #closeButtonAddOrEdit>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <mat-form-field class="full-width">
+                                <mat-label>Id</mat-label>
+                                <input matInput type="text" [(ngModel)]="idInput" disabled>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <mat-form-field class="full-width">
+                                <mat-label>Name</mat-label>
+                                <input matInput type="text" [(ngModel)]="nameInput" [formControl]="nameInputControl"
+                                    placeholder="Enter a name...">
+                                <mat-error *ngIf="nameInputControl.hasError('required')">
+                                    Name is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <mat-form-field class="full-width">
+                                <mat-label>Location</mat-label>
+                                <input matInput type="text" [(ngModel)]="locationInput"
+                                    [formControl]="locationInputControl" placeholder="Enter a location...">
+                                <mat-error *ngIf="locationInputControl.hasError('required')">
+                                    Location is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <mat-form-field class="full-width">
+                                <mat-label>Description</mat-label>
+                                <input matInput type="text" [(ngModel)]="descriptionInput"
+                                    placeholder="Enter a description...">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <mat-form-field class="full-width">
+                                <mat-label>Picture</mat-label>
+                                <input matInput type="text" [(ngModel)]="pictureInput" placeholder="Enter a picture...">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <mat-form-field class="full-width">
+                                <mat-label>Expiration Date</mat-label>
+                                <input matInput [min]="minDateInput" [matDatepicker]="expirationDatePicker"
+                                    [(ngModel)]="expirationDateInput">
+                                <mat-datepicker-toggle matSuffix [for]="expirationDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #expirationDatePicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button mat-raised-button data-dismiss="modal" class="mr-3">Cancel</button>
+                <button *ngIf="!isEdit" mat-raised-button color="primary" (click)="addItem()" data-dismiss="modal">Add Item</button>
+                <button *ngIf="isEdit" mat-raised-button color="primary" (click)="updateItem()">Update Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteItemModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Delete Item</h2>
+                <button type="button" class="close" data-dismiss="modal" #closeButtonDelete>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <p class="text-center">Are you sure you want to delete this item?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button mat-raised-button data-dismiss="modal" class="mr-3">Cancel</button>
+                <button mat-raised-button color="warn" (click)="deleteItem()">Delete Item</button>
+            </div>
+        </div>
+    </div>
+</div>
