@@ -17,7 +17,8 @@ export class ItemComponent implements OnInit {
 
     constructor(private itemService: ItemService) { }
 
-    @ViewChild('closebutton') closebutton;
+    @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit;
+    @ViewChild('closeButtonDelete') closeButtonDelete;
     @ViewChild(MatTable) table: MatTable<any>;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -47,11 +48,15 @@ export class ItemComponent implements OnInit {
     minDateInput: Date = new Date();
 
     ngOnInit(): void {
+        this.getAllItems();
+        
+    }
+
+    getAllItems() {
         this.itemService.getItems().subscribe(items => {
             this.dataSource = items;
             //this.dataSource.sort = this.sort;
         });
-        
     }
 
     /* ----------------
@@ -70,7 +75,7 @@ export class ItemComponent implements OnInit {
 
     editItemClick(item): void {
         this.isEdit = true;
-        debugger;
+
         this.idInput = item.id;
         this.nameInput = item.name;
         this.locationInput = item.location;
@@ -95,11 +100,9 @@ export class ItemComponent implements OnInit {
         };
 
         this.itemService.addItem(itemToAdd).subscribe(itemResult => {
-            this.closebutton.nativeElement.click();
+            this.closeButtonAddOrEdit.nativeElement.click();
             this.dataSource.push(itemResult);
-            
             this.table.renderRows();
-            
         }, error => {
                 // show error on a toast or modal.
         });
@@ -116,9 +119,8 @@ export class ItemComponent implements OnInit {
 
         this.itemService.updateItem(itemToUpdate).subscribe(response => {
             if (response.status === 200) {
-                //close modal.
-
-                // refresh data on the table.
+                this.closeButtonAddOrEdit.nativeElement.click();
+                this.getAllItems();
             }
         }, error => {
             //maybe create a toast or modal to show error.
@@ -130,9 +132,8 @@ export class ItemComponent implements OnInit {
 
         this.itemService.deleteItem(itemId).subscribe(response => {
             if (response.status === 200) {
-                //close modal.
-
-                // refresh data on the table.
+                this.closeButtonDelete.nativeElement.click();
+                this.getAllItems();
             }
         }, error => {
                 //maybe create a toast or modal to show error.
