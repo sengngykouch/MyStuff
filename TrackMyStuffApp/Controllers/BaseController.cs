@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 /*****************************************************
-    BaseController allow us to inject DBContext Once. 
+    BaseController allow us to inject DBContext Once.
     Any child classes will automatically have DBContext.
 
  ******************************************************/

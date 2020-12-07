@@ -1,6 +1,7 @@
 ﻿using EFDataAccessLib.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,10 +36,17 @@ namespace TrackMyStuff.Controllers
         [HttpPost]
         public async Task<ActionResult<Item>> Post(Item item)
         {
-            _dbContext.Item.Add(item);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                _dbContext.Item.Add(item);
+                await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
+                return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return BadRequest(dbEx.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -69,7 +77,7 @@ namespace TrackMyStuff.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -85,10 +93,10 @@ namespace TrackMyStuff.Controllers
             _dbContext.Item.Remove(item);
             await _dbContext.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
 
-
         private bool ItemExists(int id) => _dbContext.Item.Any(e => e.Id == id);
+       
     }
 }
