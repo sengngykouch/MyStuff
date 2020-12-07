@@ -1,42 +1,31 @@
-import { Component, AfterViewInit, OnInit, ViewChild } from '@angular/core';
-
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
 
-//TODO: remove this after hook with API.
-let date = new Date(2021, 11, 23);
-const itemConst = [
-    { Id: 1, Name: 'Noodle', Location: 'Kitchen', Description: 'White chinese noodle in green package', ExpirationDate: date },
-    { Id: 2, Name: 'Soup Base', Location: 'Kitchen', Description: 'Orange package with sheep as the cover', ExpirationDate: date }
-];
+import { MatSort } from '@angular/material/sort';
+import { MatTable } from '@angular/material/table';
+
+import { Item, ItemService } from '../services/item/item.service';
 
 @Component({
     selector: 'app-item',
     templateUrl: './item.component.html',
     styleUrls: ['./item.component.css']
 })
-export class ItemComponent implements OnInit, AfterViewInit {
+export class ItemComponent implements OnInit {
 
-    constructor() { }
+    constructor(private itemService: ItemService) { }
 
+    @ViewChild('closebutton') closebutton;
+    @ViewChild(MatTable) table: MatTable<any>;
     @ViewChild(MatSort) sort: MatSort;
-
-    ngOnInit(): void {
-    }
-
-    ngAfterViewInit(): void {
-        this.dataSource.sort = this.sort;
-    }
 
     /* ----------------
         Properties
     -------------------*/
     displayedColumns: string[] = ['Id', 'Name', 'Location', 'Description', 'Picture', 'ExpirationDate', 'Option'];
 
-    dataSource = new MatTableDataSource(itemConst);
+    dataSource;// = new MatTableDataSource<Item>(); 
 
     nameInputControl = new FormControl('', [
         Validators.required
@@ -45,7 +34,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         Validators.required
     ]);
 
-    isEdit: boolean = false;
+    isEdit = false;
 
     idInput: number;
     nameInput: string;
@@ -55,6 +44,14 @@ export class ItemComponent implements OnInit, AfterViewInit {
     expirationDateInput: Date;
 
     minDateInput: Date = new Date();
+
+    ngOnInit(): void {
+        this.itemService.getItems().subscribe(items => {
+            this.dataSource = items;
+            //this.dataSource.sort = this.sort;
+        });
+        
+    }
 
     /* ----------------
         Modal Triggers
@@ -89,7 +86,20 @@ export class ItemComponent implements OnInit, AfterViewInit {
         Modal Buttons
     --------------------*/
     addItem(): void {
+        let itemToAdd: Item = {
+            Name: this.nameInput,
+            Location: this.locationInput,
+            Description: this.descriptionInput,
+            ExpirationDate: this.expirationDateInput
+        };
 
+        this.itemService.addItem(itemToAdd).subscribe(itemResult => {
+            this.closebutton.nativeElement.click();
+            this.dataSource.push(itemResult);
+            
+            this.table.renderRows();
+            
+        });
     }
 
     updateItem(): void {
