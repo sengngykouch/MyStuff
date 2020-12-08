@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
 
 import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 
 import { Item, ItemService } from '../services/item/item.service';
 
@@ -11,7 +12,7 @@ import { Item, ItemService } from '../services/item/item.service';
     templateUrl: './item.component.html',
     styleUrls: ['./item.component.css']
 })
-export class ItemComponent implements OnInit {
+export class ItemComponent implements OnInit, AfterViewInit {
 
     constructor(private itemService: ItemService) { }
 
@@ -19,15 +20,16 @@ export class ItemComponent implements OnInit {
     @ViewChild('closeButtonDelete') closeButtonDelete;
     @ViewChild(MatTable) table: MatTable<any>;
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
     /* ----------------
         Properties
     -------------------*/
     isItemLoading: boolean = true;
 
-    displayedColumns: string[] = ['Id', 'Name', 'Location', 'Description', 'Picture', 'ExpirationDate', 'Option'];
+    displayedColumns: string[] = ['id', 'name', 'location', 'description', 'picture', 'expirationDate', 'option'];
 
-    dataSource;// = new MatTableDataSource<Item>(); 
+    dataSource = new MatTableDataSource<Item>();
 
     nameInputControl = new FormControl('', [
         Validators.required
@@ -52,10 +54,14 @@ export class ItemComponent implements OnInit {
 
     }
 
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+
     getAllItems() {
         this.itemService.getItems().subscribe(items => {
-            this.dataSource = items;
-            //this.dataSource.sort = this.sort;
+            this.dataSource.data = items;
             this.isItemLoading = false;
         });
     }
@@ -104,7 +110,10 @@ export class ItemComponent implements OnInit {
 
         this.itemService.addItem(itemToAdd).subscribe(itemResult => {
             this.closeButtonAddOrEdit.nativeElement.click();
-            this.dataSource.push(itemResult);
+
+            const data = this.dataSource.data;
+            data.push(itemResult);
+            this.dataSource.data = data;
             this.table.renderRows();
 
             this.isItemLoading = false;
