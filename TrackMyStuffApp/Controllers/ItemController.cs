@@ -1,6 +1,7 @@
 ﻿using EFDataAccessLib.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,17 @@ namespace TrackMyStuff.Controllers
     [ApiController]
     public class ItemController : BaseController
     {
+        private readonly ILogger _logger;
+
+        public ItemController(ILoggerFactory logger)
+        {
+            _logger = logger.CreateLogger(typeof(ItemController));
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Item>>> Get()
         {
             var items = await _dbContext.Item.ToListAsync();
-
             return items;
         }
 
@@ -43,9 +50,10 @@ namespace TrackMyStuff.Controllers
 
                 return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
             }
-            catch (DbUpdateException dbEx)
+            catch (Exception ex)
             {
-                return BadRequest(dbEx.Message);
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
@@ -72,8 +80,9 @@ namespace TrackMyStuff.Controllers
             {
                 await _dbContext.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!ItemExists(id))
+            catch (DbUpdateConcurrencyException dbEx) when (!ItemExists(id))
             {
+                _logger.LogError(dbEx, dbEx.Message);
                 return NotFound();
             }
 
@@ -97,6 +106,5 @@ namespace TrackMyStuff.Controllers
         }
 
         private bool ItemExists(int id) => _dbContext.Item.Any(e => e.Id == id);
-       
     }
 }
