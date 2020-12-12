@@ -12,6 +12,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { ItemComponent } from './item/item.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 import { LoadingComponent } from './shared/components/loading/loading.component';
 
 @NgModule({
@@ -32,7 +33,13 @@ import { LoadingComponent } from './shared/components/loading/loading.component'
             { path: 'item', component: ItemComponent }
         ], { relativeLinkResolution: 'legacy' }),
         BrowserAnimationsModule,
-        AngularMaterialModule
+        AngularMaterialModule,
+        ToastrModule.forRoot({
+            timeOut: 5000,
+            extendedTimeOut: 5000,
+            closeButton: true,
+            tapToDismiss: true
+        })
     ],
     providers: [],
     bootstrap: [AppComponent]

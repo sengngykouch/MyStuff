@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 
@@ -14,7 +15,10 @@ import { Item, ItemService } from '../services/item/item.service';
 })
 export class ItemComponent implements OnInit, AfterViewInit {
 
-    constructor(private itemService: ItemService) { }
+    constructor(
+        private itemService: ItemService,
+        private toastr: ToastrService
+    ) { }
 
     @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit;
     @ViewChild('closeButtonDelete') closeButtonDelete;
@@ -51,7 +55,6 @@ export class ItemComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.getAllItems();
-
     }
 
     ngAfterViewInit() {
@@ -72,6 +75,9 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.itemService.getItems().subscribe(items => {
             this.dataSource.data = items;
             this.isItemLoading = false;
+        }, error => {
+            this.toastr.error('Failed to get items.');
+            console.error(error);
         });
     }
 
@@ -126,8 +132,11 @@ export class ItemComponent implements OnInit, AfterViewInit {
             this.table.renderRows();
 
             this.isItemLoading = false;
+
+            this.toastr.success('Successfully added the item.');
         }, error => {
-            // show error on a toast or modal.
+            this.toastr.error('Failed to add the new item.');
+            console.error(error);
         });
     }
 
@@ -145,9 +154,11 @@ export class ItemComponent implements OnInit, AfterViewInit {
             if (response.status === 200) {
                 this.closeButtonAddOrEdit.nativeElement.click();
                 this.getAllItems();
+                this.toastr.success('Successfully updated the item.');
             }
         }, error => {
-            //maybe create a toast or modal to show error.
+            this.toastr.error('Failed to update the item.');
+            console.error(error);
         });
     }
 
@@ -158,9 +169,11 @@ export class ItemComponent implements OnInit, AfterViewInit {
             if (response.status === 200) {
                 this.closeButtonDelete.nativeElement.click();
                 this.getAllItems();
+                this.toastr.success('Successfully deleted the item.');
             }
         }, error => {
-            //maybe create a toast or modal to show error.
+            this.toastr.error('Failed to delete the item.');
+            console.error(error);
         });
     }
 
