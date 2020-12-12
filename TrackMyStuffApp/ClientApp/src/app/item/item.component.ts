@@ -95,7 +95,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.expirationDateInput = new Date();
     }
 
-    editItemClick(item): void {
+    editItemClick(item: Item): void {
         this.isEdit = true;
 
         this.idInput = item.id;
@@ -106,7 +106,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.expirationDateInput = item.expirationDate;
     }
 
-    deleteItemClick(item): void {
+    deleteItemClick(item: Item): void {
         this.idInput = item.id;
     }
 
@@ -115,10 +115,11 @@ export class ItemComponent implements OnInit, AfterViewInit {
     --------------------*/
     addItem(): void {
         let itemToAdd: Item = {
-            Name: this.nameInput,
-            Location: this.locationInput,
-            Description: this.descriptionInput,
-            ExpirationDate: this.expirationDateInput
+            name: this.nameInput,
+            location: this.locationInput,
+            description: this.descriptionInput,
+            picture: null,
+            expirationDate: this.expirationDateInput
         };
 
         this.isItemLoading = true;
@@ -142,11 +143,12 @@ export class ItemComponent implements OnInit, AfterViewInit {
 
     updateItem(): void {
         let itemToUpdate: Item = {
-            Id: this.idInput,
-            Name: this.nameInput,
-            Location: this.locationInput,
-            Description: this.descriptionInput,
-            ExpirationDate: this.expirationDateInput
+            id: this.idInput,
+            name: this.nameInput,
+            location: this.locationInput,
+            description: this.descriptionInput,
+            picture: null,
+            expirationDate: this.expirationDateInput
         };
         this.isItemLoading = true;
 

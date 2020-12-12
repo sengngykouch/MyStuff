@@ -32,7 +32,7 @@ export class ItemService {
     }
 
     updateItem(item: Item): Observable<any> {
-        let url = `${this.itemUrl}/${item.Id}`;
+        let url = `${this.itemUrl}/${item.id}`;
         return this.http.put(url, item, { observe: 'response' })
             .pipe(
                 catchError(this.handleError)
@@ -64,9 +64,10 @@ export class ItemService {
 }
 
 export interface Item {
-    Id?: number;
-    Name: string;
-    Location: string;
-    Description: string;
-    ExpirationDate?: Date;
+    id?: number;
+    name: string;
+    location: string;
+    description: string;
+    picture: string;
+    expirationDate?: Date;
 }
