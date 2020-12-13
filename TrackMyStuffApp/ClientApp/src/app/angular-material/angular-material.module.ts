@@ -7,12 +7,13 @@ import { CommonModule } from '@angular/common';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
     declarations: [],
@@ -20,6 +21,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         CommonModule,
         MatTableModule,
         MatSortModule,
+        MatPaginatorModule,
         MatButtonModule,
         MatIconModule,
         MatInputModule,
@@ -29,6 +31,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     exports: [
         MatTableModule,
         MatSortModule,
+        MatPaginatorModule,
         MatButtonModule,
         MatIconModule,
         MatInputModule,

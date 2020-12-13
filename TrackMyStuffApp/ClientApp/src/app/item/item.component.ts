@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 
 import { Item, ItemService } from '../services/item/item.service';
 
@@ -11,23 +13,27 @@ import { Item, ItemService } from '../services/item/item.service';
     templateUrl: './item.component.html',
     styleUrls: ['./item.component.css']
 })
-export class ItemComponent implements OnInit {
+export class ItemComponent implements OnInit, AfterViewInit {
 
-    constructor(private itemService: ItemService) { }
+    constructor(
+        private itemService: ItemService,
+        private toastr: ToastrService
+    ) { }
 
     @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit;
     @ViewChild('closeButtonDelete') closeButtonDelete;
     @ViewChild(MatTable) table: MatTable<any>;
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
     /* ----------------
         Properties
     -------------------*/
     isItemLoading: boolean = true;
 
-    displayedColumns: string[] = ['Id', 'Name', 'Location', 'Description', 'Picture', 'ExpirationDate', 'Option'];
+    displayedColumns: string[] = ['id', 'name', 'location', 'description', 'picture', 'expirationDate', 'option'];
 
-    dataSource;// = new MatTableDataSource<Item>(); 
+    dataSource = new MatTableDataSource<Item>();
 
     nameInputControl = new FormControl('', [
         Validators.required
@@ -49,14 +55,29 @@ export class ItemComponent implements OnInit {
 
     ngOnInit(): void {
         this.getAllItems();
+    }
 
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
     }
 
     getAllItems() {
         this.itemService.getItems().subscribe(items => {
-            this.dataSource = items;
-            //this.dataSource.sort = this.sort;
+            this.dataSource.data = items;
             this.isItemLoading = false;
+        }, error => {
+            this.toastr.error('Failed to get items.');
+            console.error(error);
         });
     }
 
@@ -74,7 +95,7 @@ export class ItemComponent implements OnInit {
         this.expirationDateInput = new Date();
     }
 
-    editItemClick(item): void {
+    editItemClick(item: Item): void {
         this.isEdit = true;
 
         this.idInput = item.id;
@@ -85,7 +106,7 @@ export class ItemComponent implements OnInit {
         this.expirationDateInput = item.expirationDate;
     }
 
-    deleteItemClick(item): void {
+    deleteItemClick(item: Item): void {
         this.idInput = item.id;
     }
 
@@ -94,32 +115,40 @@ export class ItemComponent implements OnInit {
     --------------------*/
     addItem(): void {
         let itemToAdd: Item = {
-            Name: this.nameInput,
-            Location: this.locationInput,
-            Description: this.descriptionInput,
-            ExpirationDate: this.expirationDateInput
+            name: this.nameInput,
+            location: this.locationInput,
+            description: this.descriptionInput,
+            picture: null,
+            expirationDate: this.expirationDateInput
         };
 
         this.isItemLoading = true;
 
         this.itemService.addItem(itemToAdd).subscribe(itemResult => {
             this.closeButtonAddOrEdit.nativeElement.click();
-            this.dataSource.push(itemResult);
+
+            const data = this.dataSource.data;
+            data.push(itemResult);
+            this.dataSource.data = data;
             this.table.renderRows();
 
             this.isItemLoading = false;
+
+            this.toastr.success('Successfully added the item.');
         }, error => {
-            // show error on a toast or modal.
+            this.toastr.error('Failed to add the new item.');
+            console.error(error);
         });
     }
 
     updateItem(): void {
         let itemToUpdate: Item = {
-            Id: this.idInput,
-            Name: this.nameInput,
-            Location: this.locationInput,
-            Description: this.descriptionInput,
-            ExpirationDate: this.expirationDateInput
+            id: this.idInput,
+            name: this.nameInput,
+            location: this.locationInput,
+            description: this.descriptionInput,
+            picture: null,
+            expirationDate: this.expirationDateInput
         };
         this.isItemLoading = true;
 
@@ -127,9 +156,11 @@ export class ItemComponent implements OnInit {
             if (response.status === 200) {
                 this.closeButtonAddOrEdit.nativeElement.click();
                 this.getAllItems();
+                this.toastr.success('Successfully updated the item.');
             }
         }, error => {
-            //maybe create a toast or modal to show error.
+            this.toastr.error('Failed to update the item.');
+            console.error(error);
         });
     }
 
@@ -140,9 +171,11 @@ export class ItemComponent implements OnInit {
             if (response.status === 200) {
                 this.closeButtonDelete.nativeElement.click();
                 this.getAllItems();
+                this.toastr.success('Successfully deleted the item.');
             }
         }, error => {
-            //maybe create a toast or modal to show error.
+            this.toastr.error('Failed to delete the item.');
+            console.error(error);
         });
     }
 
