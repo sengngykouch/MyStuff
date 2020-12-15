@@ -11,10 +11,14 @@ namespace MyStuff
     {
         public static void Main(string[] args)
         {
-            // Create configuration object from appsettings.json file.
+            // Create configuration object from appsettings.json file
+            // and it will be overridden by appsetting.{ENVIRONMENT}.json file.
+            var enviroment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{enviroment}.json", optional: true) // this will override appsettings.json.
                 .Build();
 
             // Make Serilog log read from the appsettings.json file.

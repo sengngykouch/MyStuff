@@ -232,3 +232,6 @@ _Pvt_Extensions
 
 # Log files
 **/log*.txt
+
+# AppSettings file for production shouldn't be committed.
+TrackMyStuffApp/appsettings.Production.json
