@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrackMyStuff", "TrackMyStuffApp\TrackMyStuff.csproj", "{A8FFDB75-507E-49DF-BF76-30C29B110C75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFDataAccessLib", "EFDataAccessLib\EFDataAccessLib.csproj", "{80F1211B-C35C-404D-AB21-493D82CA86CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFDataAccessLib", "EFDataAccessLib\EFDataAccessLib.csproj", "{80F1211B-C35C-404D-AB21-493D82CA86CE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWSS3Lib", "AWSS3Lib\AWSS3Lib.csproj", "{D3E6B87F-23AA-4909-8957-24C2C76D0C3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{80F1211B-C35C-404D-AB21-493D82CA86CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80F1211B-C35C-404D-AB21-493D82CA86CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80F1211B-C35C-404D-AB21-493D82CA86CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3E6B87F-23AA-4909-8957-24C2C76D0C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3E6B87F-23AA-4909-8957-24C2C76D0C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3E6B87F-23AA-4909-8957-24C2C76D0C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3E6B87F-23AA-4909-8957-24C2C76D0C3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
