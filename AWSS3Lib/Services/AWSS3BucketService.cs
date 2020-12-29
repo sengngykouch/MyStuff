@@ -1,4 +1,5 @@
-﻿using AWSS3Lib.IAWS_S3;
+﻿using Amazon.S3;
+using AWSS3Lib.IAWS_S3;
 using AWSS3Lib.IServices;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -20,7 +21,16 @@ namespace AWSS3Lib.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentNullException("FileName must not be null.");
+                }
+
                 return await _AWSS3BucketHelper.Get(fileName);
+            }
+            catch (AmazonS3Exception)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -32,6 +42,11 @@ namespace AWSS3Lib.Services
         {
             try
             {
+                if (fileStream == null)
+                {
+                    throw new ArgumentNullException("FormFile must not be null.");
+                }
+
                 var fileExtension = Path.GetExtension(fileStream.FileName);
                 var fileName = $"{DateTime.Now.Ticks}{fileExtension}";
 
@@ -46,6 +61,10 @@ namespace AWSS3Lib.Services
                     return null;
                 }
             }
+            catch (AmazonS3Exception)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 throw;
@@ -56,7 +75,16 @@ namespace AWSS3Lib.Services
         {
             try
             {
+                if (inputStream == null || string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentNullException("FormFile or fileName must not be null");
+                }
+
                 return await _AWSS3BucketHelper.Update(inputStream.OpenReadStream(), fileName);
+            }
+            catch (AmazonS3Exception)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -68,7 +96,16 @@ namespace AWSS3Lib.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    throw new ArgumentNullException("FileName must not be null.");
+                }
+
                 return await _AWSS3BucketHelper.Delete(fileName);
+            }
+            catch (AmazonS3Exception)
+            {
+                throw;
             }
             catch (Exception)
             {

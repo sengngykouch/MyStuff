@@ -41,6 +41,10 @@ namespace AWSS3Lib.AWS_S3
                     return null;
                 }
             }
+            catch (AmazonS3Exception)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 throw;
@@ -69,6 +73,10 @@ namespace AWSS3Lib.AWS_S3
                     return false;
                 }
             }
+            catch (AmazonS3Exception)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 throw;
@@ -81,6 +89,10 @@ namespace AWSS3Lib.AWS_S3
             {
                 var result = await this.Add(inputStream, oldFileName);
                 return result;
+            }
+            catch (AmazonS3Exception)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -101,6 +113,10 @@ namespace AWSS3Lib.AWS_S3
                 {
                     return false;
                 }
+            }
+            catch (AmazonS3Exception)
+            {
+                throw;
             }
             catch (Exception)
             {
