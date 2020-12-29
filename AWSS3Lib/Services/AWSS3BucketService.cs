@@ -1,5 +1,6 @@
 ﻿using AWSS3Lib.IAWS_S3;
 using AWSS3Lib.IServices;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -27,14 +28,14 @@ namespace AWSS3Lib.Services
             }
         }
 
-        public async Task<string> Add(FileStream fileStream)
+        public async Task<string> Add(IFormFile fileStream)
         {
             try
             {
-                var fileExtension = Path.GetExtension(fileStream.Name);
+                var fileExtension = Path.GetExtension(fileStream.FileName);
                 var fileName = $"{DateTime.Now.Ticks}{fileExtension}";
 
-                var result = await _AWSS3BucketHelper.Add(fileStream, fileName);
+                var result = await _AWSS3BucketHelper.Add(fileStream.OpenReadStream(), fileName);
 
                 if (result)
                 {
@@ -51,11 +52,11 @@ namespace AWSS3Lib.Services
             }
         }
 
-        public async Task<bool> Update(FileStream inputStream, string fileName)
+        public async Task<bool> Update(IFormFile inputStream, string fileName)
         {
             try
             {
-                return await _AWSS3BucketHelper.Update(inputStream, fileName);
+                return await _AWSS3BucketHelper.Update(inputStream.OpenReadStream(), fileName);
             }
             catch (Exception)
             {

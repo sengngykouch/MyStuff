@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Microsoft.AspNetCore.Http;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace AWSS3Lib.IServices
@@ -7,9 +8,9 @@ namespace AWSS3Lib.IServices
     {
         Task<Stream> Get(string fileName);
 
-        Task<string> Add(FileStream inputStream);
+        Task<string> Add(IFormFile inputStream);
 
-        Task<bool> Update(FileStream inputStream, string fileName);
+        Task<bool> Update(IFormFile inputStream, string fileName);
 
         Task<bool> Delete(string fileName);
     }
