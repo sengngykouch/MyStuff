@@ -4,14 +4,16 @@ using EFDataAccessLib.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFDataAccessLib.Migrations
 {
     [DbContext(typeof(TrackMyStuffDBContext))]
-    partial class TrackMyStuffContextModelSnapshot : ModelSnapshot
+    [Migration("20201229180334_AddImageColumnToItemTable")]
+    partial class AddImageColumnToItemTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
