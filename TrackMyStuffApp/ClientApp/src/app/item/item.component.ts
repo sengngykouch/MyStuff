@@ -7,6 +7,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 
 import { Item, ItemService } from '../services/item/item.service';
+import { FileUploadComponent } from '../shared/components/file-upload/file-upload.component';
 
 @Component({
     selector: 'app-item',
@@ -20,11 +21,13 @@ export class ItemComponent implements OnInit, AfterViewInit {
         private toastr: ToastrService
     ) { }
 
-    @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit;
-    @ViewChild('closeButtonDelete') closeButtonDelete;
+    @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit: any;
+    @ViewChild('closeButtonDelete') closeButtonDelete: any;
     @ViewChild(MatTable) table: MatTable<any>;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+
+    @ViewChild(FileUploadComponent) fileUploadComponent: FileUploadComponent;
 
     /* ----------------
         Properties
@@ -48,10 +51,14 @@ export class ItemComponent implements OnInit, AfterViewInit {
     nameInput: string;
     locationInput: string;
     descriptionInput: string;
+    //TODO: might need a different type.
     pictureInput: string;
     expirationDateInput: Date;
 
     minDateInput: Date = new Date();
+
+    // fileUpload
+    selectedFileObject: any = null;
 
     ngOnInit(): void {
         this.getAllItems();
@@ -78,7 +85,13 @@ export class ItemComponent implements OnInit, AfterViewInit {
         }, error => {
             this.toastr.error('Failed to get items.');
             console.error(error);
+            this.isItemLoading = false;
         });
+    }
+
+    setImageObj_OnFileChange(selectedFileObj: any): void {
+        this.selectedFileObject = selectedFileObj;
+        console.log(this.selectedFileObject);
     }
 
     /* ----------------
@@ -91,7 +104,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.nameInput = '';
         this.locationInput = '';
         this.descriptionInput = '';
-        this.pictureInput = '';
+        this.fileUploadComponent.deleteFile();
         this.expirationDateInput = new Date();
     }
 
@@ -102,6 +115,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.nameInput = item.name;
         this.locationInput = item.location;
         this.descriptionInput = item.description;
+        //TODO: somehow get and display the image from S3.
         this.pictureInput = item.picture;
         this.expirationDateInput = item.expirationDate;
     }
