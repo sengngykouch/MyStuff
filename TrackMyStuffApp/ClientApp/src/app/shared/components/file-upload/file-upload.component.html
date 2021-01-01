@@ -1,0 +1,18 @@
+<div [hidden]="fileName.length > 0" class="file-upload-container">
+    <mat-icon [inline]="true" class="text-center" style="font-size:3rem;">cloud_upload</mat-icon>
+    <p class="text-center">Drag and drop file here</p>
+    <p class="text-center">or</p>
+    <div class="file-upload-btn">
+        <input #fileUploadInput type="file" class="file-upload-input" (change)="onChangeSelectedFile()" />
+        <button mat-raised-button (click)="fileUploadInputClick()">Browse for file</button>
+    </div>
+</div>
+<div *ngIf="fileName.length > 0" class="file-upload-result-container mt-2">
+    <mat-icon class="file-upload-icon-vert-align">text_snippet</mat-icon>
+    <span>
+        {{fileName}}
+    </span>
+    <button mat-icon-button class="float-right" style="top:-8px;" (click)="deleteFile()">
+        <mat-icon>delete</mat-icon>
+    </button>
+</div>
