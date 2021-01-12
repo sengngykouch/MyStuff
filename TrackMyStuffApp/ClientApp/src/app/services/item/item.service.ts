@@ -68,6 +68,6 @@ export interface Item {
     name: string;
     location: string;
     description: string;
-    picture: string;
+    image: string;
     expirationDate?: Date;
 }

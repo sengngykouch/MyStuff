@@ -8,6 +8,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 
 import { Item, ItemService } from '../services/item/item.service';
 import { FileUploadComponent } from '../shared/components/file-upload/file-upload.component';
+import { ImageService } from '../services/image/image.service';
 
 @Component({
     selector: 'app-item',
@@ -18,6 +19,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
 
     constructor(
         private itemService: ItemService,
+        private imageService: ImageService,
         private toastr: ToastrService
     ) { }
 
@@ -51,14 +53,12 @@ export class ItemComponent implements OnInit, AfterViewInit {
     nameInput: string;
     locationInput: string;
     descriptionInput: string;
-    //TODO: might need a different type.
-    pictureInput: string;
     expirationDateInput: Date;
 
     minDateInput: Date = new Date();
-
-    // fileUpload
-    selectedFileObject: any = null;
+    
+    imageString: string; // image name from database.
+    selectedFileObject: any = null; // actual image file to store in AWS S3.
 
     ngOnInit(): void {
         this.getAllItems();
@@ -104,6 +104,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.nameInput = '';
         this.locationInput = '';
         this.descriptionInput = '';
+        this.imageString = null;
         this.fileUploadComponent.deleteFile();
         this.expirationDateInput = new Date();
     }
@@ -115,9 +116,10 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.nameInput = item.name;
         this.locationInput = item.location;
         this.descriptionInput = item.description;
-        //TODO: somehow get and display the image from S3.
-        this.pictureInput = item.picture;
+        this.imageString = item.image;
         this.expirationDateInput = item.expirationDate;
+
+        //TODO: we need to fetch image to display in the modal.
     }
 
     deleteItemClick(item: Item): void {
@@ -127,12 +129,21 @@ export class ItemComponent implements OnInit, AfterViewInit {
     /* -----------------
         Modal Buttons
     --------------------*/
+    saveItem(): void {
+        if(!this.selectedFileObject){
+            this.addItem();
+            return;
+        }
+
+        this.addImageThenAddItem(this.selectedFileObject);
+    }
+
     addItem(): void {
         let itemToAdd: Item = {
             name: this.nameInput,
             location: this.locationInput,
             description: this.descriptionInput,
-            picture: null,
+            image: this.imageString,
             expirationDate: this.expirationDateInput
         };
 
@@ -161,7 +172,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
             name: this.nameInput,
             location: this.locationInput,
             description: this.descriptionInput,
-            picture: null,
+            image: null,
             expirationDate: this.expirationDateInput
         };
         this.isItemLoading = true;
@@ -191,6 +202,59 @@ export class ItemComponent implements OnInit, AfterViewInit {
             this.toastr.error('Failed to delete the item.');
             console.error(error);
         });
+    }
+
+    /* ----------------
+        Image CRUD
+    -------------------*/
+    getImage(imageName: string): void {
+        this.imageService.getImage(imageName).subscribe(
+            response => {
+
+                var re = response;
+                debugger;
+
+                var rawResponse = "�PNG...."; // truncated for example
+
+                // convert to Base64
+                var b64Response = btoa(rawResponse);
+
+                // create an image
+                var outputImg = document.createElement('img');
+                outputImg.src = 'data:image/png;base64,'+b64Response;
+
+                // append it to your page
+                document.body.appendChild(outputImg);
+            },
+            error => {
+                this.toastr.error('Failed to get the image.');
+                console.error(error);
+            }
+        )
+    }
+
+    addImageThenAddItem(selectedFileObj: any): void {
+        this.imageService.addImage(selectedFileObj).subscribe(
+            response => {
+                this.isItemLoading = false;
+                if(response){
+                    this.addItem();
+                }
+            },
+            error => {
+                this.isItemLoading = false;
+                this.toastr.error('Failed to upload the image.');
+                console.error(error);
+            }
+        )
+    }
+
+    updateImage(): void {
+
+    }
+
+    deleteImage(): void {
+
     }
 
 }
