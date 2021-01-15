@@ -1,0 +1,14 @@
+<div class="image-preview-container">
+    <div *ngIf="imageSrc">
+        <div *ngIf="canDelete">
+            <button class="close image-preview-close-btn" type="button" (click)="deleteImage()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <img [src]="imageSrc" class="image-preview-image">
+    </div>
+    <div *ngIf="showDefaultImage && !imageSrc" class="image-preview-default-container">
+        <mat-icon [inline]="true" class="text-center" style="font-size: 3rem;">photo</mat-icon>
+        <p class="text-center">No image found</p>
+    </div>
+</div>

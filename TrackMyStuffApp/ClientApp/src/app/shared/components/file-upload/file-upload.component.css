@@ -1,0 +1,31 @@
+.file-upload-container {
+    width: 100%;
+    padding: 2rem;
+    border: 1px #e5e5e5 solid;
+    border-radius: 6px;
+}
+
+    .file-upload-container p, mat-icon {
+        color:#757575;
+    }
+
+.file-upload-input {
+    display: none;
+}
+
+.file-upload-btn {
+    width: 122px; /* size of the button */
+    margin: 0 auto;
+}
+
+.file-upload-result-container {
+    width: 100%;
+    border: 1px #e5e5e5 solid;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.file-upload-icon-vert-align {
+    vertical-align: -6px;
+    padding-right: 2rem;
+}

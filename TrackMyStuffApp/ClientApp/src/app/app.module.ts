@@ -14,6 +14,8 @@ import { ItemComponent } from './item/item.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LoadingComponent } from './shared/components/loading/loading.component';
+import { FileUploadComponent } from './shared/components/file-upload/file-upload.component';
+import { ImagePreviewComponent } from './shared/components/image-preview/image-preview.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +23,9 @@ import { LoadingComponent } from './shared/components/loading/loading.component'
         NavMenuComponent,
         HomeComponent,
         ItemComponent,
-        LoadingComponent
+        LoadingComponent,
+        FileUploadComponent,
+        ImagePreviewComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

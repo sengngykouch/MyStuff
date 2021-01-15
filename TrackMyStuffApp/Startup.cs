@@ -1,4 +1,6 @@
 using EFDataAccessLib.DataAccess;
+using AWSS3Lib.AWS_S3;
+using AWSS3Lib.IAWS_S3;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -6,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using AWSS3Lib.IServices;
+using AWSS3Lib.Services;
+using AWSS3Lib.Models;
 
 namespace MyStuff
 {
@@ -27,6 +32,13 @@ namespace MyStuff
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            // Get from appsettings file, then inject into AWSServiceConfiguration class.
+            services.Configure<AWSServiceConfiguration>(Configuration.GetSection("AWSServiceConfiguration"));
+
+            // Dependency injected classes.
+            services.AddTransient<IAWSS3BucketHelper, AWSS3BucketHelper>();
+            services.AddTransient<IAWSS3BucketService, AWSS3BucketService>();
 
             services.AddDbContext<TrackMyStuffDBContext>(options =>
             {
