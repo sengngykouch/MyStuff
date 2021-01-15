@@ -127,7 +127,9 @@
                     </mat-form-field>
 
                     <p style="color:#727272;">Image (Optional)</p>
-                    <app-file-upload (selectedFileChange)="setImageObj_OnFileChange($event)"></app-file-upload>
+                    <app-file-upload *ngIf="!imageSource" (selectedFileChange)="setImageObj_OnFileChange($event)"></app-file-upload>
+                    <app-image-preview *ngIf="imageSource" [imageSrc]="imageSource" 
+                        [canDelete]="true" [showDefaultImage]="false" (deleteImageEvent)="deletePreviewImage($event)"></app-image-preview>
                 </div>
             </div>
             <div class="modal-footer">

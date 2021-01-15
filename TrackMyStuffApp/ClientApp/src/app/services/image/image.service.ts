@@ -18,7 +18,7 @@ export class ImageService {
 
     getImage(fileName: string): Observable<any>{
         let url = this.imageUrl + `/${fileName}`;
-        return this.http.get(url, { responseType: 'blob' })
+        return this.http.get(url, { responseType: 'blob'})
             .pipe(
                 //catchError(this.)
                 // TODO: need a custom handler here.

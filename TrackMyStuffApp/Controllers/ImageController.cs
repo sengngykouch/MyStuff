@@ -28,7 +28,7 @@ namespace TrackMyStuff.Controllers
             try
             {
                 var result = await _AWSS3BucketService.Get(fileName);
-                return Ok(result);
+                return File(result, "image/webp");
             }
             catch (ArgumentNullException aEx)
             {

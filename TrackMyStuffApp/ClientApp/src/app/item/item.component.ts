@@ -10,6 +10,7 @@ import { Item, ItemService } from '../services/item/item.service';
 import { FileUploadComponent } from '../shared/components/file-upload/file-upload.component';
 import { ImageService } from '../services/image/image.service';
 
+
 @Component({
     selector: 'app-item',
     templateUrl: './item.component.html',
@@ -56,9 +57,10 @@ export class ItemComponent implements OnInit, AfterViewInit {
     expirationDateInput: Date;
 
     minDateInput: Date = new Date();
-    
+
     imageString: string; // image name from database.
     selectedFileObject: any = null; // actual image file to store in AWS S3.
+    imageSource: string; // for displaying image.
 
     ngOnInit(): void {
         this.getAllItems();
@@ -105,6 +107,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.locationInput = '';
         this.descriptionInput = '';
         this.imageString = null;
+        this.imageSource = null;
         this.fileUploadComponent.deleteFile();
         this.expirationDateInput = new Date();
     }
@@ -117,9 +120,12 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.locationInput = item.location;
         this.descriptionInput = item.description;
         this.imageString = item.image;
+        this.imageSource = null;
         this.expirationDateInput = item.expirationDate;
 
-        //TODO: we need to fetch image to display in the modal.
+        if (this.imageString !== null) {
+            this.getImage(this.imageString);
+        }
     }
 
     deleteItemClick(item: Item): void {
@@ -131,14 +137,14 @@ export class ItemComponent implements OnInit, AfterViewInit {
     --------------------*/
     saveItem(): void {
 
-        if(this.isEdit){
+        if (this.isEdit) {
             this.updateItem();
-        }else{
-            if(!this.selectedFileObject){
+        } else {
+            if (!this.selectedFileObject) {
                 this.addItem();
                 return;
             }
-    
+
             this.addImageThenAddItem(this.selectedFileObject);
         }
     }
@@ -215,21 +221,12 @@ export class ItemComponent implements OnInit, AfterViewInit {
     getImage(imageName: string): void {
         this.imageService.getImage(imageName).subscribe(
             response => {
-
-                var re = response;
-                debugger;
-
-                var rawResponse = "�PNG...."; // truncated for example
-
-                // convert to Base64
-                var b64Response = btoa(rawResponse);
-
-                // create an image
-                var outputImg = document.createElement('img');
-                outputImg.src = 'data:image/png;base64,'+b64Response;
-
-                // append it to your page
-                document.body.appendChild(outputImg);
+                let reader = new FileReader();
+                reader.readAsDataURL(response);
+                // this will make sure all the streams are collected
+                reader.onloadend = () => {
+                    this.imageSource = reader.result.toString();
+                }
             },
             error => {
                 this.toastr.error('Failed to get the image.');
@@ -242,7 +239,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.imageService.addImage(selectedFileObj).subscribe(
             (response) => {
                 this.isItemLoading = false;
-                if(response.fileName){
+                if (response.fileName) {
                     this.imageString = response.fileName;
                     this.addItem();
                 }
@@ -263,4 +260,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
 
     }
 
+    deletePreviewImage(source: string): void {
+        this.imageSource = source;
+    }
 }
