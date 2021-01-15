@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace TrackMyStuff.Controllers
@@ -50,7 +51,12 @@ namespace TrackMyStuff.Controllers
         {
             try
             {
-                var result = await _AWSS3BucketService.Add(formFile);
+                var fileName = await _AWSS3BucketService.Add(formFile);
+
+                var result = new Dictionary<string, string>
+                {
+                    { "fileName", fileName }
+                };
                 return Ok(result);
             }
             catch (ArgumentNullException aEx)

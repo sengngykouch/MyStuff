@@ -130,12 +130,17 @@ export class ItemComponent implements OnInit, AfterViewInit {
         Modal Buttons
     --------------------*/
     saveItem(): void {
-        if(!this.selectedFileObject){
-            this.addItem();
-            return;
-        }
 
-        this.addImageThenAddItem(this.selectedFileObject);
+        if(this.isEdit){
+            this.updateItem();
+        }else{
+            if(!this.selectedFileObject){
+                this.addItem();
+                return;
+            }
+    
+            this.addImageThenAddItem(this.selectedFileObject);
+        }
     }
 
     addItem(): void {
@@ -235,13 +240,14 @@ export class ItemComponent implements OnInit, AfterViewInit {
 
     addImageThenAddItem(selectedFileObj: any): void {
         this.imageService.addImage(selectedFileObj).subscribe(
-            response => {
+            (response) => {
                 this.isItemLoading = false;
-                if(response){
+                if(response.fileName){
+                    this.imageString = response.fileName;
                     this.addItem();
                 }
             },
-            error => {
+            (error) => {
                 this.isItemLoading = false;
                 this.toastr.error('Failed to upload the image.');
                 console.error(error);

@@ -132,9 +132,8 @@
             </div>
             <div class="modal-footer">
                 <button mat-raised-button data-dismiss="modal" class="mr-3">Cancel</button>
-                <button *ngIf="!isEdit" mat-raised-button color="primary" (click)="addItem()" data-dismiss="modal">Add
-                    Item</button>
-                <button *ngIf="isEdit" mat-raised-button color="primary" (click)="updateItem()">Update Item</button>
+                <button mat-raised-button color="primary" (click)="saveItem()" data-dismiss="modal">{{isEdit ? 'Update Item' : 
+                    'Add Item'}}</button>
             </div>
         </div>
     </div>
