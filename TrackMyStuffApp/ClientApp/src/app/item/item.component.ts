@@ -7,7 +7,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 
 import { Item, ItemService } from '../services/item/item.service';
-import { FileUploadComponent } from '../shared/components/file-upload/file-upload.component';
 import { ImageService } from '../services/image/image.service';
 import { finalize } from 'rxjs/operators';
 
@@ -30,8 +29,6 @@ export class ItemComponent implements OnInit, AfterViewInit {
     @ViewChild(MatTable) table: MatTable<any>;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-
-    @ViewChild(FileUploadComponent) fileUploadComponent: FileUploadComponent;
 
     /* ----------------
         Properties
