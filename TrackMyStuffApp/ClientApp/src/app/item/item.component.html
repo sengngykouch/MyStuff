@@ -134,7 +134,7 @@
             </div>
             <div class="modal-footer">
                 <button mat-raised-button data-dismiss="modal" class="mr-3">Cancel</button>
-                <button mat-raised-button color="primary" (click)="saveItem()" data-dismiss="modal">{{isEdit ? 'Update Item' : 
+                <button mat-raised-button color="primary" (click)="saveImageAndItem()" data-dismiss="modal">{{isEdit ? 'Update Item' : 
                     'Add Item'}}</button>
             </div>
         </div>
@@ -162,7 +162,7 @@
             </div>
             <div class="modal-footer">
                 <button mat-raised-button data-dismiss="modal" class="mr-3">Cancel</button>
-                <button mat-raised-button color="warn" (click)="deleteItem()">Delete Item</button>
+                <button mat-raised-button color="warn" (click)="deleteImageAndItem()">Delete Item</button>
             </div>
         </div>
     </div>

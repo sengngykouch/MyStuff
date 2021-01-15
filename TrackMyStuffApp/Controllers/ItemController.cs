@@ -75,6 +75,7 @@ namespace TrackMyStuff.Controllers
             originalItem.Location = item.Location;
             originalItem.Description = item.Description;
             originalItem.ExpirationDate = item.ExpirationDate;
+            originalItem.Image = item.Image;
 
             try
             {

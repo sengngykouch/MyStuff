@@ -9,6 +9,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Item, ItemService } from '../services/item/item.service';
 import { FileUploadComponent } from '../shared/components/file-upload/file-upload.component';
 import { ImageService } from '../services/image/image.service';
+import { finalize } from 'rxjs/operators';
 
 
 @Component({
@@ -59,7 +60,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
     minDateInput: Date = new Date();
 
     imageString: string; // image name from database.
-    selectedFileObject: any = null; // actual image file to store in AWS S3.
+    selectedFileObject: any = null; // actual image file to store in AWS S3. it's part of the <Input>.
     imageSource: string; // for displaying image.
 
     ngOnInit(): void {
@@ -80,17 +81,6 @@ export class ItemComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getAllItems() {
-        this.itemService.getItems().subscribe(items => {
-            this.dataSource.data = items;
-            this.isItemLoading = false;
-        }, error => {
-            this.toastr.error('Failed to get items.');
-            console.error(error);
-            this.isItemLoading = false;
-        });
-    }
-
     setImageObj_OnFileChange(selectedFileObj: any): void {
         this.selectedFileObject = selectedFileObj;
         console.log(this.selectedFileObject);
@@ -108,7 +98,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.descriptionInput = '';
         this.imageString = null;
         this.imageSource = null;
-        this.fileUploadComponent.deleteFile();
+        this.selectedFileObject = null;
         this.expirationDateInput = new Date();
     }
 
@@ -121,6 +111,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         this.descriptionInput = item.description;
         this.imageString = item.image;
         this.imageSource = null;
+        this.selectedFileObject = null;
         this.expirationDateInput = item.expirationDate;
 
         if (this.imageString !== null) {
@@ -135,18 +126,83 @@ export class ItemComponent implements OnInit, AfterViewInit {
     /* -----------------
         Modal Buttons
     --------------------*/
-    saveItem(): void {
+    saveImageAndItem(): void {
 
         if (this.isEdit) {
-            this.updateItem();
-        } else {
-            if (!this.selectedFileObject) {
-                this.addItem();
+            // start with no image, then no image.
+            if (!this.selectedFileObject && !this.imageString) {
+                this.updateItem();
                 return;
             }
 
-            this.addImageThenAddItem(this.selectedFileObject);
+            // start with no image, then add image.
+            if (!this.imageString && this.selectedFileObject) {
+                this.addImageThenUpdateItem();
+                return;
+            }
+
+            // start with image, then replace image.
+            if (this.imageString && this.selectedFileObject) {
+                //replace image, then update item.
+                this.updateImageThenUpdateItem();
+                return;
+            }
+
+            // start with image, then remove image.
+            if (this.imageString && !this.imageSource && !this.selectedFileObject) {
+                this.deleteImageThenUpdateItem();
+                return;
+            }
         }
+
+
+        if (!this.selectedFileObject) {
+            this.addItem();
+            return;
+        }
+
+        this.addImageThenAddItem(this.selectedFileObject);
+    }
+
+    deleteImageAndItem(): void {
+        this.isItemLoading = true;
+
+        if (!this.imageString) {
+            this.deleteItem();
+            return;
+        }
+
+        this.imageService.deleteImage(this.imageString)
+            .pipe(
+                finalize(() => {
+                    this.isItemLoading = false;
+                })
+            )
+            .subscribe(
+                response => {
+                    if (response) {
+                        this.deleteItem();
+                    }
+                },
+                error => {
+                    this.toastr.error('Failed to delete the image.');
+                    console.error(error);
+                }
+            );
+    }
+
+    /* ----------------
+        Item CRUD
+    -------------------*/
+    getAllItems() {
+        this.itemService.getItems().subscribe(items => {
+            this.dataSource.data = items;
+            this.isItemLoading = false;
+        }, error => {
+            this.toastr.error('Failed to get items.');
+            console.error(error);
+            this.isItemLoading = false;
+        });
     }
 
     addItem(): void {
@@ -160,21 +216,25 @@ export class ItemComponent implements OnInit, AfterViewInit {
 
         this.isItemLoading = true;
 
-        this.itemService.addItem(itemToAdd).subscribe(itemResult => {
-            this.closeButtonAddOrEdit.nativeElement.click();
+        this.itemService.addItem(itemToAdd)
+            .pipe(
+                finalize(() => {
+                    this.isItemLoading = false;
+                })
+            )
+            .subscribe(
+                itemResult => {
+                    this.closeButtonAddOrEdit.nativeElement.click();
 
-            const data = this.dataSource.data;
-            data.push(itemResult);
-            this.dataSource.data = data;
-            this.table.renderRows();
-
-            this.isItemLoading = false;
-
-            this.toastr.success('Successfully added the item.');
-        }, error => {
-            this.toastr.error('Failed to add the new item.');
-            console.error(error);
-        });
+                    const data = this.dataSource.data;
+                    data.push(itemResult);
+                    this.dataSource.data = data;
+                    this.table.renderRows();
+                    this.toastr.success('Successfully added the item.');
+                }, error => {
+                    this.toastr.error('Failed to add the new item.');
+                    console.error(error);
+                });
     }
 
     updateItem(): void {
@@ -183,36 +243,51 @@ export class ItemComponent implements OnInit, AfterViewInit {
             name: this.nameInput,
             location: this.locationInput,
             description: this.descriptionInput,
-            image: null,
+            image: this.imageString,
             expirationDate: this.expirationDateInput
         };
         this.isItemLoading = true;
 
-        this.itemService.updateItem(itemToUpdate).subscribe(response => {
-            if (response.status === 200) {
-                this.closeButtonAddOrEdit.nativeElement.click();
-                this.getAllItems();
-                this.toastr.success('Successfully updated the item.');
-            }
-        }, error => {
-            this.toastr.error('Failed to update the item.');
-            console.error(error);
-        });
+        this.itemService.updateItem(itemToUpdate)
+            .pipe(
+                finalize(() => {
+                    this.isItemLoading = false;
+                })
+            ).subscribe(
+                response => {
+                    if (response.status === 200) {
+                        this.closeButtonAddOrEdit.nativeElement.click();
+                        this.getAllItems();
+                        this.toastr.success('Successfully updated the item.');
+                    }
+                },
+                error => {
+                    this.toastr.error('Failed to update the item.');
+                    console.error(error);
+                });
     }
 
     deleteItem(): void {
         let itemId = this.idInput;
 
-        this.itemService.deleteItem(itemId).subscribe(response => {
-            if (response.status === 200) {
-                this.closeButtonDelete.nativeElement.click();
-                this.getAllItems();
-                this.toastr.success('Successfully deleted the item.');
-            }
-        }, error => {
-            this.toastr.error('Failed to delete the item.');
-            console.error(error);
-        });
+        this.itemService.deleteItem(itemId)
+            .pipe(
+                finalize(() => {
+                    this.isItemLoading = false;
+                })
+            )
+            .subscribe(
+                response => {
+                    if (response.status === 200) {
+                        this.closeButtonDelete.nativeElement.click();
+                        this.getAllItems();
+                        this.toastr.success('Successfully deleted the item.');
+                    }
+                },
+                error => {
+                    this.toastr.error('Failed to delete the item.');
+                    console.error(error);
+                });
     }
 
     /* ----------------
@@ -236,28 +311,87 @@ export class ItemComponent implements OnInit, AfterViewInit {
     }
 
     addImageThenAddItem(selectedFileObj: any): void {
-        this.imageService.addImage(selectedFileObj).subscribe(
-            (response) => {
+        this.isItemLoading = true;
+
+        this.imageService.addImage(selectedFileObj)
+            .pipe(
+                finalize(() => {
+                    this.isItemLoading = false;
+                })
+            )
+            .subscribe(
+                response => {
+                    if (response.fileName) {
+                        this.imageString = response.fileName;
+                        this.addItem();
+                    }
+                },
+                error => {
+                    this.toastr.error('Failed to upload the image.');
+                    console.error(error);
+                }
+            )
+    }
+
+    addImageThenUpdateItem(): void {
+        this.imageService.addImage(this.selectedFileObject).pipe(
+            finalize(() => {
                 this.isItemLoading = false;
+            })
+        ).subscribe(
+            response => {
                 if (response.fileName) {
                     this.imageString = response.fileName;
-                    this.addItem();
+                    this.updateItem();
                 }
             },
-            (error) => {
-                this.isItemLoading = false;
-                this.toastr.error('Failed to upload the image.');
+            error => {
+                this.toastr.error('Failed to add the image.');
                 console.error(error);
-            }
-        )
+            })
     }
 
-    updateImage(): void {
+    updateImageThenUpdateItem(): void {
+        this.imageService.updateImage(this.imageString, this.selectedFileObject)
+            .pipe(
+                finalize(() => {
+                    this.isItemLoading = false;
+                })
+            ).subscribe(
+                response => {
 
+                    if (response) {
+                        this.updateItem();
+                    }
+                },
+                error => {
+                    this.isItemLoading = false;
+                    this.toastr.error('Failed to update the image.');
+                    console.error(error);
+                }
+            )
     }
 
-    deleteImage(): void {
-
+    deleteImageThenUpdateItem(): void {
+        this.imageService.deleteImage(this.imageString)
+            .pipe(
+                finalize(() => {
+                    this.isItemLoading = false;
+                })
+            ).subscribe(
+                response => {
+                    //this.isItemLoading = false;
+                    if (response) {
+                        this.imageString = null;
+                        this.updateItem();
+                    }
+                },
+                error => {
+                    //this.isItemLoading = false;
+                    this.toastr.error('Failed to delete image.');
+                    console.error(error);
+                }
+            )
     }
 
     deletePreviewImage(source: string): void {
