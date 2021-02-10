@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
     selector: 'app-file-upload',
@@ -10,7 +10,7 @@ export class FileUploadComponent implements OnInit {
     @ViewChild('fileUploadInput') fileUploadInput: ElementRef<HTMLInputElement>;
     @Output() selectedFileChange: EventEmitter<File> = new EventEmitter();
 
-    constructor() { }
+    constructor(private renderer: Renderer2) { }
 
     fileName: string = '';
 
@@ -29,7 +29,7 @@ export class FileUploadComponent implements OnInit {
 
     deleteFile(): void {
         this.fileName = '';
-        this.fileUploadInput.nativeElement.value = '';
+        this.renderer.setValue(this.fileUploadInput.nativeElement, '');
         this.selectedFileChange.emit(null);
     }
 }
