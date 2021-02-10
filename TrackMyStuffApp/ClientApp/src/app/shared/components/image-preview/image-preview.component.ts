@@ -11,7 +11,7 @@ export class ImagePreviewComponent implements OnInit {
     @Input('canDelete') canDelete: boolean = false; 
     @Input('showDefaultImage') showDefaultImage: boolean = true;
 
-    @Output() deleteImageEvent: EventEmitter<any> = new EventEmitter();
+    @Output() deleteImageEvent: EventEmitter<void> = new EventEmitter();
 
     constructor() { }
 
@@ -19,7 +19,7 @@ export class ImagePreviewComponent implements OnInit {
     }
 
     deleteImage(): void {
-        this.deleteImageEvent.emit(null);
+        this.deleteImageEvent.emit();
         this.imageSrc = null;
     }
 }

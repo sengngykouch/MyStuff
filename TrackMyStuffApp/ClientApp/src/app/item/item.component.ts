@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -24,9 +24,9 @@ export class ItemComponent implements OnInit, AfterViewInit {
         private toastr: ToastrService
     ) { }
 
-    @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit: any;
-    @ViewChild('closeButtonDelete') closeButtonDelete: any;
-    @ViewChild(MatTable) table: MatTable<any>;
+    @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit: ElementRef<HTMLButtonElement>;
+    @ViewChild('closeButtonDelete') closeButtonDelete: ElementRef<HTMLButtonElement>;
+    @ViewChild(MatTable) table: MatTable<Item>;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -57,7 +57,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
     minDateInput: Date = new Date();
 
     imageString: string; // image name from database.
-    selectedFileObject: any = null; // actual image file to store in AWS S3. it's part of the <Input>.
+    selectedFileObject: File = null; // actual image file to store in AWS S3. it's part of the <Input>.
     imageSource: string; // for displaying image.
 
     ngOnInit(): void {
@@ -78,7 +78,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setImageObj_OnFileChange(selectedFileObj: any): void {
+    setImageObj_OnFileChange(selectedFileObj: File): void {
         this.selectedFileObject = selectedFileObj;
         console.log(this.selectedFileObject);
     }
@@ -307,7 +307,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
         )
     }
 
-    addImageThenAddItem(selectedFileObj: any): void {
+    addImageThenAddItem(selectedFileObj: File): void {
         this.isItemLoading = true;
 
         this.imageService.addImage(selectedFileObj)
@@ -391,7 +391,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
             )
     }
 
-    deletePreviewImage(source: string): void {
-        this.imageSource = source;
+    deletePreviewImage(): void {
+        this.imageSource = null;
     }
 }

@@ -15,18 +15,18 @@ export class ImageService {
         this.imageUrl = baseUrl + 'api/image';
     }
 
-    getImage(fileName: string): Observable<any> {
+    getImage(fileName: string): Observable<Blob> {
         let url = this.imageUrl + `/${fileName}`;
         return this.http.get(url, { responseType: 'blob' });
     }
 
-    addImage(file: any): Observable<any> {
+    addImage(file: File): Observable<any> {
         let formData = new FormData();
         formData.append('image', file);
         return this.http.post(this.imageUrl, formData);
     }
 
-    updateImage(fileName: string, file: any): Observable<any> {
+    updateImage(fileName: string, file: File): Observable<any> {
         let url = this.imageUrl + `/${fileName}`
         let formData = new FormData();
         formData.append('image', file);
