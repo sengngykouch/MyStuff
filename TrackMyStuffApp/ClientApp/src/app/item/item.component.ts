@@ -391,7 +391,7 @@ export class ItemComponent implements OnInit, AfterViewInit {
             )
     }
 
-    deletePreviewImage(source: string): void {
-        this.imageSource = source;
+    deletePreviewImage(): void {
+        this.imageSource = null;
     }
 }
