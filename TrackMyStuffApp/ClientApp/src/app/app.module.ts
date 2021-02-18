@@ -16,6 +16,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { LoadingComponent } from './shared/components/loading/loading.component';
 import { FileUploadComponent } from './shared/components/file-upload/file-upload.component';
 import { ImagePreviewComponent } from './shared/components/image-preview/image-preview.component';
+import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { ImagePreviewComponent } from './shared/components/image-preview/image-p
         ItemComponent,
         LoadingComponent,
         FileUploadComponent,
-        ImagePreviewComponent
+        ImagePreviewComponent,
+        ConfirmationModalComponent
     ],
     imports: [
         BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
