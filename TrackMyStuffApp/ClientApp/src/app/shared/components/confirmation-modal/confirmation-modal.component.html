@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button mat-raised-button data-dismiss="modal" class="mr-3"
+                <button mat-raised-button [color]="declineButtonColor" data-dismiss="modal" class="mr-3"
                     (click)="onDecline()">{{declineButtonText}}
                 </button>
                 <button mat-raised-button [color]="acceptButtonColor" 
