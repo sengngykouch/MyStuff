@@ -1,8 +1,7 @@
 
 <span data-toggle="modal" [attr.data-target]="'#' + modalId">
-   <ng-content select="modal-open-button"></ng-content>
+   <ng-content select="button [modal-launch-button]"></ng-content>
 </span>
-
 
 <div class="modal fade" [attr.id]="modalId" data-backdrop="static" data-keyboard="false" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -18,7 +17,7 @@
                     <div class="row mb-2">
                         <div class="col-md-12">
                             <p class="text-center">
-                                <ng-content select="modal-body"></ng-content>
+                                <ng-content select="[modal-body]"></ng-content>
                             </p>
                         </div>
                     </div>
@@ -26,8 +25,11 @@
             </div>
             <div class="modal-footer">
                 <button mat-raised-button data-dismiss="modal" class="mr-3"
-                    (click)="onDecline()">{{declineButtonText}}</button>
-                <button mat-raised-button [color]="acceptButtonColor" (click)="onAccept()" data-dismiss="modal">{{acceptButtonText}}</button>
+                    (click)="onDecline()">{{declineButtonText}}
+                </button>
+                <button mat-raised-button [color]="acceptButtonColor" 
+                    (click)="onAccept()" data-dismiss="modal">{{acceptButtonText}}
+                </button>
             </div>
         </div>
     </div>
