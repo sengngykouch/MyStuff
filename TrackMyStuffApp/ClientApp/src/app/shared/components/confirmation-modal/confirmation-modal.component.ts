@@ -22,7 +22,7 @@ export class ConfirmationModalComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-        this.modalId = this.getUniqueModalId();
+        this.modalId = this.generateUniqueModalId();
     }
 
     onAccept(): void {
@@ -33,7 +33,7 @@ export class ConfirmationModalComponent implements OnInit {
         this.onDeclineEmitter.emit();
     }
 
-    private getUniqueModalId(): string {
+    private generateUniqueModalId(): string {
         let now = new Date();
         let ticks = now.getTime();
         return 'modalId_' + ticks;
