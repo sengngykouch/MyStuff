@@ -25,7 +25,6 @@ export class ItemComponent implements OnInit, AfterViewInit {
     ) { }
 
     @ViewChild('closeButtonAddOrEdit') closeButtonAddOrEdit: ElementRef<HTMLButtonElement>;
-    @ViewChild('closeButtonDelete') closeButtonDelete: ElementRef<HTMLButtonElement>;
     @ViewChild(MatTable) table: MatTable<Item>;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -276,7 +275,6 @@ export class ItemComponent implements OnInit, AfterViewInit {
             .subscribe(
                 response => {
                     if (response.status === 200) {
-                        this.closeButtonDelete.nativeElement.click();
                         this.getAllItems();
                         this.toastr.success('Successfully deleted the item.');
                     }
