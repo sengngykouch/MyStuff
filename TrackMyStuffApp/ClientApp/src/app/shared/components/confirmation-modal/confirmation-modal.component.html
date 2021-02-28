@@ -16,7 +16,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-md-12">
-                            <p class="text-center">
+                            <p class="text-center confirmation-modal-body">
                                 <ng-content select="[modal-body]"></ng-content>
                             </p>
                         </div>
@@ -24,14 +24,13 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button mat-raised-button id="decline-button" [attr.color]="declineButtonColor" data-dismiss="modal" class="mr-3"
+                <button mat-raised-button id="decline-button" [color]="declineButtonColor" data-dismiss="modal" class="mr-3"
                     (click)="onDecline()">{{declineButtonText}}
                 </button>
-                <button mat-raised-button id="accept-button" [attr.color]="acceptButtonColor" 
+                <button mat-raised-button id="accept-button" [color]="acceptButtonColor" 
                     (click)="onAccept()" data-dismiss="modal">{{acceptButtonText}}
                 </button>
             </div>
         </div>
     </div>
 </div> 
-
