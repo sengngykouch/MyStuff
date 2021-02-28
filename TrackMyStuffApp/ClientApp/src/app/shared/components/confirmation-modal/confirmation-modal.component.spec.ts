@@ -2,14 +2,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { ConfirmationModalComponent } from './confirmation-modal.component';
+import {AngularMaterialModule } from '../../../angular-material/angular-material.module';
 
-fdescribe('ConfirmationModalComponent', () => {
+describe('ConfirmationModalComponent', () => {
     let component: ConfirmationModalComponent;
     let fixture: ComponentFixture<ConfirmationModalComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ConfirmationModalComponent]
+            declarations: [ConfirmationModalComponent],
+            imports:[AngularMaterialModule]
         })
             .compileComponents();
     });
@@ -50,22 +52,24 @@ fdescribe('ConfirmationModalComponent', () => {
         expect(button.nativeElement.innerText).toEqual(declineButtonText);
     });
 
-    it('should set accept button color to accent in the DOM', () => {
+    it('should set Accept button color to accent in the DOM', () => {
         let buttonColor: 'accent' = 'accent';
         component.acceptButtonColor = buttonColor;
         fixture.detectChanges();
         let buttonEl = fixture.debugElement.query(By.css('#accept-button'));
 
-        expect(buttonEl.attributes.color).toEqual(buttonColor);
+        // "color" attr is transpiled to "ng-reflect-color".
+        expect(buttonEl.nativeElement.getAttribute("ng-reflect-color")).toEqual(buttonColor);
     });
 
-    it('should set decline button color to accent in the DOM', () => {
+    it('should set Decline button color to accent in the DOM', () => {
         let buttonColor: 'accent' = 'accent';
         component.declineButtonColor = buttonColor;
         fixture.detectChanges();
-        let buttonEle = fixture.debugElement.query(By.css('#decline-button'));
+        let buttonEl = fixture.debugElement.query(By.css('#decline-button'));
 
-        expect(buttonEle.attributes.color).toEqual(buttonColor);
+    
+        expect(buttonEl.nativeElement.getAttribute("ng-reflect-color")).toEqual(buttonColor);
     });
 
     it('should emit when accept button is clicked', () => {
