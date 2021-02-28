@@ -66,10 +66,22 @@
                             <mat-icon>edit</mat-icon>
                         </button>
 
-                        <button class="btn" (click)="deleteItemClick(element)" data-toggle="modal"
+                        <!-- <button class="btn" (click)="deleteItemClick(element)" data-toggle="modal"
                             data-target="#deleteItemModal">
                             <mat-icon>delete</mat-icon>
-                        </button>
+                        </button> -->
+
+                        <app-confirmation-modal headerTitle="Delete Item" 
+                                                acceptButtonText="Delete Item"
+                                                acceptButtonColor="warn"
+                                                (onAccept)="deleteImageAndItem()">
+                            <button class="btn" modal-launch-button (click)="deleteItemClick(element)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <ng-container ngProjectAs="[modal-body]">
+                                Are you sure you want to delete this item?
+                            </ng-container>
+                        </app-confirmation-modal>
                     </td>
                 </ng-container>
 
@@ -127,14 +139,16 @@
                     </mat-form-field>
 
                     <p style="color:#727272;">Image (Optional)</p>
-                    <app-file-upload *ngIf="!imageSource" (selectedFileChange)="setImageObj_OnFileChange($event)"></app-file-upload>
-                    <app-image-preview *ngIf="imageSource" [imageSrc]="imageSource" 
-                        [canDelete]="true" [showDefaultImage]="false" (deleteImageEvent)="deletePreviewImage()"></app-image-preview>
+                    <app-file-upload *ngIf="!imageSource" (selectedFileChange)="setImageObj_OnFileChange($event)">
+                    </app-file-upload>
+                    <app-image-preview *ngIf="imageSource" [imageSrc]="imageSource" [canDelete]="true"
+                        [showDefaultImage]="false" (deleteImageEvent)="deletePreviewImage()"></app-image-preview>
                 </div>
             </div>
             <div class="modal-footer">
                 <button mat-raised-button data-dismiss="modal" class="mr-3">Cancel</button>
-                <button mat-raised-button color="primary" (click)="saveImageAndItem()" data-dismiss="modal">{{isEdit ? 'Update Item' : 
+                <button mat-raised-button color="primary" (click)="saveImageAndItem()" data-dismiss="modal">{{isEdit ?
+                    'Update Item' :
                     'Add Item'}}</button>
             </div>
         </div>
