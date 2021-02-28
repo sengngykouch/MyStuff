@@ -9,10 +9,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class ConfirmationModalComponent implements OnInit {
 
     @Input() headerTitle: string = 'Confirmation Modal';
-    @Input() acceptButtonText: string = 'OK';
-    @Input() declineButtonText: string = 'CANCEL';
+    @Input() acceptButtonText: string = 'Ok';
+    @Input() declineButtonText: string = 'Cancel';
     @Input() acceptButtonColor: 'primary' | 'accent' | 'warn' | 'none' = 'primary';
-    @Input() declineButtonColor: 'primary' | 'accent' | 'warn' | 'none' = 'primary';
+    @Input() declineButtonColor: 'primary' | 'accent' | 'warn' | 'none' = 'none';
 
     @Output('onAccept') onAcceptEmitter: EventEmitter<void> = new EventEmitter();
     @Output('onDecline') onDeclineEmitter: EventEmitter<void> = new EventEmitter();
